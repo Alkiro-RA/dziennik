@@ -26,10 +26,10 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Users` (
   `Password` VARCHAR(45) NOT NULL,
   `Role` VARCHAR(1) NOT NULL,
   PRIMARY KEY (`IdUser`),
-  UNIQUE INDEX `IdUser_UNIQUE` (`IdUser` ASC) VISIBLE,
-  UNIQUE INDEX `Login_UNIQUE` (`Login` ASC) VISIBLE,
-  UNIQUE INDEX `Password_UNIQUE` (`Password` ASC) VISIBLE,
-  UNIQUE INDEX `Role_UNIQUE` (`Role` ASC) VISIBLE)
+  UNIQUE INDEX `IdUser_UNIQUE` (`IdUser` ASC),
+  UNIQUE INDEX `Login_UNIQUE` (`Login` ASC),
+  UNIQUE INDEX `Password_UNIQUE` (`Password` ASC),
+  UNIQUE INDEX `Role_UNIQUE` (`Role` ASC))
 ENGINE = InnoDB;
 
 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Roles` (
   `IdRole` VARCHAR(1) NOT NULL,
   `RoleDesc` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`IdRole`),
-  UNIQUE INDEX `IdRole_UNIQUE` (`IdRole` ASC) VISIBLE)
+  UNIQUE INDEX `IdRole_UNIQUE` (`IdRole` ASC))
 ENGINE = InnoDB;
 
 
