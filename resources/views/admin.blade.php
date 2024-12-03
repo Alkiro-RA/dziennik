@@ -1,6 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    use Illuminate\Support\Facades\Auth;
+
+    // Sprawdzenie, czy użytkownik jest zalogowany i ma uprawnienia administratora
+    if (!Auth::check() || Auth::user()->is_admin != 1) {
+        echo '
+        <div class="container">
+            <h1>Brak dostępu</h1>
+            <p>Nie masz uprawnień, aby wyświetlić tę stronę.</p>
+            <a href="' . url('/home') . '" class="btn btn-secondary mt-3">Powrót na stronę główną</a>
+        </div>';
+        return;
+    }
+@endphp
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -10,7 +25,10 @@
                 <div class="card-body">
                     <h3>Witaj w panelu administracyjnym!</h3>
                     <p>Możesz tutaj zarządzać użytkownikami i innymi danymi systemowymi.</p>
-                    <a href="{{ route('logout') }}" class="btn btn-danger">Wyloguj się</a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-danger mt-3">Wyloguj się</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -27,14 +45,15 @@
                         </div>
                     @endif
 
-                    <a href="{{ route('admin.create') }}" class="btn btn-primary mb-3">Create User</a>
+                    <a href="{{ route('admin.create') }}" class="btn btn-primary mb-3">Utwórz konto</a>
 
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Actions</th>
+                                <th>Nazwa</th>
+                                <th>E-mail</th>
+                                <th>Rola</th>
+                                <th>Akcje</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,13 +61,15 @@
                             <tr>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>{{ $user->role ?? 'admin' }}</td> <!-- Wyświetlanie roli -->
                                 <td>
-                                    <a href="{{ route('admin.edit', $user) }}" class="btn btn-warning btn-sm">Edit</a>
+                                    <a href="{{ route('admin.edit', $user) }}" class="btn btn-warning btn-sm">Edytuj</a>
                                     <form action="{{ route('admin.destroy', $user) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
                                     </form>
+                                    <a href="{{ route('users.role', $user->id) }}" class="btn btn-secondary btn-sm">Rola</a>
                                 </td>
                             </tr>
                             @endforeach

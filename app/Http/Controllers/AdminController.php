@@ -43,19 +43,22 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string|in:uczeń,nauczyciel',
         ]);
-
+        
+        // Tworzenie nowego usera 
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
+            'name' => $validated['name'], // Przypisanie nazwy
+            'email' => $validated['email'], // Przypisanie maila
+            'password' => bcrypt($validated['password']), // Przypisanie hała
+            'role' => $validated['role'], // Przypisanie roli
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'User created successfully.');
+        return redirect()->route('admin.dashboard')->with('success', 'Utworzono nowego użytkownika!');
     }
 
     /**
-     * Wyświetl formularz do edycji użytkownika.
+     * wyświetlanie formularza edycji
      *
      * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
@@ -66,7 +69,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Zaktualizuj dane użytkownika.
+     * aktualizacja usera
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\User $user
@@ -86,11 +89,11 @@ class AdminController extends Controller
             'password' => $validated['password'] ? bcrypt($validated['password']) : $user->password,
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'User updated successfully.');
+        return redirect()->route('admin.dashboard')->with('success', 'Zaktualizowano dane użytkownika.');
     }
 
     /**
-     * Usuń użytkownika.
+     * Usunięcie usera
      *
      * @param \App\Models\User $user
      * @return \Illuminate\Http\Response
@@ -99,6 +102,24 @@ class AdminController extends Controller
     {
         $user->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', 'User deleted successfully.');
+        return redirect()->route('admin.dashboard')->with('success', 'Usunięto użytkownika.');
+    }
+    public function editRole($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.role', compact('user'));
+    }
+
+    public function updateRole(Request $request, $id)
+    {
+        $request->validate([
+            'role' => 'required|string|in:uczeń,nauczyciel', // Dopuszczalne role
+    ]);
+
+        $user = User::findOrFail($id);
+        $user->role = $request->role;
+        $user->save();
+
+        return redirect()->route('admin.dashboard')->with('success', 'Rola użytkownika została zaktualizowana.');
     }
 }

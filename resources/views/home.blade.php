@@ -22,7 +22,6 @@
                         <button type="submit" class="btn btn-danger mt-3">Wyloguj się</button>
                     </form>
                     <br>
-                    <a href="{{ url('/admin') }}" class="btn btn-primary">Go to Admin Panel</a>
     
                 </div>
             </div>

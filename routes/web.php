@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-
+use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\StudentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,3 +20,9 @@ Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.stor
 Route::get('/admin/edit/{user}', [AdminController::class, 'edit'])->name('admin.edit');
 Route::put('/admin/update/{user}', [AdminController::class, 'update'])->name('admin.update');
 Route::delete('/admin/delete/{user}', [AdminController::class, 'destroy'])->name('admin.destroy');
+Route::get('/admin/users/{id}/role', [App\Http\Controllers\AdminController::class, 'editRole'])->name('users.role');
+Route::post('/admin/users/{id}/role', [App\Http\Controllers\AdminController::class, 'updateRole'])->name('users.updateRole');
+Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.dashboard');
+Route::get('/student', [StudentController::class, 'index'])->name('student.dashboard');
+
+
