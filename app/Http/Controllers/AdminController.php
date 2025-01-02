@@ -42,8 +42,8 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:uczeń,nauczyciel',
+            'password' => 'required|string|min:3|confirmed',
+            'role' => 'required|string|in:uczen,nauczyciel,admin',
         ]);
         
         // Tworzenie nowego usera 
@@ -113,7 +113,7 @@ class AdminController extends Controller
     public function updateRole(Request $request, $id)
     {
         $request->validate([
-            'role' => 'required|string|in:uczeń,nauczyciel', // Dopuszczalne role
+            'role' => 'required|string|in:uczen,nauczyciel', // Dopuszczalne role
     ]);
 
         $user = User::findOrFail($id);
