@@ -1,31 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-
-                    <!-- Przycisk wylogowania -->
-                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="btn btn-danger mt-3">Wyloguj się</button>
-                    </form>
-                    <br>
+    @if(Auth::check())
     
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+        <h1>Witaj, {{ Auth::user()->name }}!</h1>
+
+        @if(Auth::user()->role == 'uczen')
+        
+            <h2>Panel ucznia</h2>
+        
+        @elseif(Auth::user()->role == 'nauczyciel')
+        
+            <h2>Panel nauczyciela</h2>
+            <button onclick="location.href='{{ route('teacher.subjects') }}'">Przejdź do listy przedmiotów</button>
+        
+        @elseif(Auth::user()->role == 'admin')
+        
+            <h2>Panel administratora</h2>
+            <button onclick="location.href='{{ route('admin.index') }}'">Przejdź do panelu administratora</button>
+        
+        @endif
+    
+    @else
+        <h1>Witaj w dzienniku. Zaloguj się lub załóż konto</h1>
+    @endif
 @endsection

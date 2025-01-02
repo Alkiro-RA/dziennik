@@ -34,8 +34,9 @@
                         <div class="form-group">
                             <label for="role">Rola</label>
                             <select class="form-control" id="role" name="role" required>
-                                <option value="uczeń">Uczeń</option>
+                                <option value="uczen">Uczeń</option>
                                 <option value="nauczyciel">Nauczyciel</option>
+                                <option value="admin">Admin</option>
                             </select>
                         </div>
 

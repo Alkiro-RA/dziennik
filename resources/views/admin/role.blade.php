@@ -17,7 +17,7 @@
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary mt-3">Zaktualizuj</button>
-                        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary mt-3">Anuluj</a>
+                        <a href="{{ route('admin.index') }}" class="btn btn-secondary mt-3">Anuluj</a>
                     </form>
                 </div>
             </div>

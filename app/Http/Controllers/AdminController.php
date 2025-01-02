@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     /**
-     * Wyświetl dashboard admina.
+     * Wyświetl panel admina.
      *
      * @return \Illuminate\Http\Response
      */
@@ -18,7 +18,7 @@ class AdminController extends Controller
         $users = User::all();
 
         // Przekazanie użytkowników do widoku
-        return view('admin', compact('users'));
+        return view('admin.index', compact('users'));
     }
 
     /**
@@ -54,7 +54,7 @@ class AdminController extends Controller
             'role' => $validated['role'], // Przypisanie roli
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Utworzono nowego użytkownika!');
+        return redirect()->route('admin.index')->with('success', 'Utworzono nowego użytkownika!');
     }
 
     /**
@@ -89,7 +89,7 @@ class AdminController extends Controller
             'password' => $validated['password'] ? bcrypt($validated['password']) : $user->password,
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Zaktualizowano dane użytkownika.');
+        return redirect()->route('admin.index')->with('success', 'Zaktualizowano dane użytkownika.');
     }
 
     /**
@@ -102,7 +102,7 @@ class AdminController extends Controller
     {
         $user->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Usunięto użytkownika.');
+        return redirect()->route('admin.index')->with('success', 'Usunięto użytkownika.');
     }
     public function editRole($id)
     {
@@ -120,6 +120,6 @@ class AdminController extends Controller
         $user->role = $request->role;
         $user->save();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Rola użytkownika została zaktualizowana.');
+        return redirect()->route('admin.index')->with('success', 'Rola użytkownika została zaktualizowana.');
     }
 }
