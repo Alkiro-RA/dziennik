@@ -18,21 +18,20 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Zmień Rolę Użytkownika</div>
+                <div class="card-header">{{ __('Dodaj klasę') }}</div>
+
                 <div class="card-body">
-                    <form method="POST" action="{{ route('users.updateRole', $user->id) }}">
+                    <form method="POST" action="{{ route('admin.storeGroup') }}">
                         @csrf
+
                         <div class="form-group">
-                            <label for="role">Rola</label>
-                            <select name="role" id="role" class="form-control">
-                                <option value="uczeń" {{ $user->role === 'uczeń' ? 'selected' : '' }}>Uczeń</option>
-                                <option value="nauczyciel" {{ $user->role === 'nauczyciel' ? 'selected' : '' }}>Nauczyciel</option>
-                            </select>
+                            <label for="name">Nazwa klasy</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3">Zaktualizuj</button>
-                        <a href="{{ route('admin.index') }}" class="btn btn-secondary mt-3">Anuluj</a>
+
+                        <button type="submit" class="btn btn-primary mt-3">Dodaj klasę</button>
                     </form>
                 </div>
             </div>

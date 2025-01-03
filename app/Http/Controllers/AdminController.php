@@ -81,12 +81,14 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
+            'role' => 'required|in:uczen,nauczyciel,admin',
         ]);
 
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'] ? bcrypt($validated['password']) : $user->password,
+            'role' => $validated['role'],
         ]);
 
         return redirect()->route('admin.index')->with('success', 'Zaktualizowano dane użytkownika.');
@@ -113,7 +115,7 @@ class AdminController extends Controller
     public function updateRole(Request $request, $id)
     {
         $request->validate([
-            'role' => 'required|string|in:uczen,nauczyciel', // Dopuszczalne role
+            'role' => 'required|string|in:uczen,nauczyciel', 
     ]);
 
         $user = User::findOrFail($id);
@@ -122,4 +124,105 @@ class AdminController extends Controller
 
         return redirect()->route('admin.index')->with('success', 'Rola użytkownika została zaktualizowana.');
     }
+
+    public function createGroup()
+{
+    return view('admin.createGroup');
+}
+
+public function storeGroup(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255|unique:groups,name',
+    ]);
+
+    // Tworzenie nowej grupy
+    \App\Models\Group::create([
+        'name' => $request->name,
+    ]);
+
+    return redirect()->route('admin.index')->with('success', 'Dodano nową klasę!');
+}
+
+
+// widok klas
+public function showGroups()
+{
+    // Pobranie wszystkich klas
+    $groups = \App\Models\Group::all();
+
+    return view('admin.groups', compact('groups'));
+}
+
+//usunięcie klasy
+public function deleteGroup($id)
+{
+    $group = \App\Models\Group::findOrFail($id);
+    $group->delete();
+
+    return redirect()->route('admin.showGroups')->with('success', 'Klasa została usunięta.');
+}
+
+//edycja klasy
+public function editGroup($id)
+{
+    $group = \App\Models\Group::findOrFail($id);
+
+    return view('admin.editGroup', compact('group'));
+}
+public function updateGroup(Request $request, $id)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+    ]);
+
+    $group = \App\Models\Group::findOrFail($id);
+    $group->update([
+        'name' => $validated['name'],
+    ]);
+
+    return redirect()->route('admin.showGroups')->with('success', 'Klasa została zaktualizowana.');
+}
+
+// lista uczniów
+public function showStudents($groupId)
+{
+    $students = \App\Models\User::where('group_id', $groupId)->where('role', 'uczen')->get();
+    $teacher = \App\Models\User::where('group_id', $groupId)->where('role', 'nauczyciel')->first();
+
+    $group = \App\Models\Group::findOrFail($groupId);
+
+    return view('admin.showStudents', compact('students', 'teacher', 'group'));
+}
+
+
+
+//wyświetla formularz dodania nauczyciela
+public function assignTeacher($groupId)
+{
+    $group = \App\Models\Group::findOrFail($groupId);
+
+    $teachers = \App\Models\User::where('role', 'nauczyciel')->get();
+
+    return view('admin.assignTeacher', compact('group', 'teachers'));
+}
+
+    // Przypisanie nauczyciela do klasy
+    public function storeTeacher(Request $request, $groupId)
+    {
+        $request->validate([
+            'teacher_id' => 'required|exists:users,id',
+        ]);
+    
+        $teacher = \App\Models\User::where('id', $request->teacher_id)
+                                   ->where('role', 'nauczyciel') 
+                                   ->firstOrFail();
+    
+        $teacher->group_id = $groupId;
+        $teacher->save();
+    
+        return redirect()->route('admin.showGroups')->with('success', 'Nauczyciel został przypisany do klasy.');
+    }
+    
+
 }
