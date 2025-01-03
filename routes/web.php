@@ -33,7 +33,9 @@ Route::middleware('auth')->group(function ()
     Route::get('group/{id}/students', [AdminController::class, 'showStudents'])->name('admin.showStudents');
     Route::get('group/{id}/assign-teacher', [AdminController::class, 'assignTeacher'])->name('admin.assignTeacher');
     Route::post('group/{id}/assign-teacher', [AdminController::class, 'storeTeacher'])->name('admin.storeTeacher');
-    
+Route::get('/admin/groups/{groupId}/add-student', [AdminController::class, 'showAddStudentForm'])->name('admin.addStudentForm');
+Route::post('/admin/groups/{groupId}/add-student', [AdminController::class, 'addStudent'])->name('admin.addStudent');
+
     
 
     // Teacher

@@ -46,5 +46,10 @@
             @endforeach
         </tbody>
     </table>
+<a href="{{ route('admin.addStudentForm', $group->id) }}" class="btn btn-primary mb-3">Dodaj ucznia do klasy</a>
+
+
+
+
 </div>
 @endsection

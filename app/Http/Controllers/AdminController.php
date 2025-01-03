@@ -224,5 +224,33 @@ public function assignTeacher($groupId)
         return redirect()->route('admin.showGroups')->with('success', 'Nauczyciel został przypisany do klasy.');
     }
     
+    public function showAddStudentForm($groupId)
+{
+    // Pobierz grupę po ID
+    $group = \App\Models\Group::findOrFail($groupId);
+
+    // Pobierz uczniów, którzy nie są przypisani do żadnej grupy
+    $students = \App\Models\User::where('role', 'uczen')->whereNull('group_id')->get();
+
+    return view('admin.addStudentToGroup', compact('group', 'students'));
+}
+public function addStudent(Request $request, $groupId)
+{
+    // Walidacja: sprawdzenie, czy uczniak o podanym ID istnieje
+    $validated = $request->validate([
+        'student_id' => 'required|exists:users,id',
+    ]);
+
+    // Znajdź ucznia po ID
+    $student = \App\Models\User::find($validated['student_id']);
+
+    // Przypisz ucznia do danej grupy
+    $student->group_id = $groupId;
+    $student->save();
+
+    // Przekierowanie do listy uczniów tej grupy
+    return redirect()->route('admin.showStudents', $groupId)->with('success', 'Uczeń został przypisany do klasy.');
+}
+
 
 }
