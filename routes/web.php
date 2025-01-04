@@ -33,8 +33,23 @@ Route::middleware('auth')->group(function ()
     Route::get('group/{id}/students', [AdminController::class, 'showStudents'])->name('admin.showStudents');
     Route::get('group/{id}/assign-teacher', [AdminController::class, 'assignTeacher'])->name('admin.assignTeacher');
     Route::post('group/{id}/assign-teacher', [AdminController::class, 'storeTeacher'])->name('admin.storeTeacher');
-Route::get('/admin/groups/{groupId}/add-student', [AdminController::class, 'showAddStudentForm'])->name('admin.addStudentForm');
-Route::post('/admin/groups/{groupId}/add-student', [AdminController::class, 'addStudent'])->name('admin.addStudent');
+    Route::get('/admin/groups/{groupId}/add-student', [AdminController::class, 'showAddStudentForm'])->name('admin.addStudentForm');
+    Route::post('/admin/groups/{groupId}/add-student', [AdminController::class, 'addStudent'])->name('admin.addStudent');
+    Route::get('/admin/subjects', [AdminController::class, 'showSubjects'])->name('admin.subjects');
+    Route::get('/admin/subjects/create', [AdminController::class, 'createSubject'])->name('admin.createSubject');
+    Route::post('/admin/subjects', [AdminController::class, 'storeSubject'])->name('admin.storeSubject');
+    Route::get('/admin/subjects/{subject}/assign-teacher', [AdminController::class, 'assignTeacherForm'])->name('admin.assignTeacherForm');
+    Route::post('/admin/subjects/{subjectId}/assign-teacher', [AdminController::class, 'assignTeacherToSubject'])->name('admin.assignTeacherToSubject');
+    Route::get('/admin/subjects/{subjectId}/assign-class', [AdminController::class, 'showAssignClassToSubjectForm'])->name('admin.showAssignClassToSubjectForm');
+    Route::post('/admin/subjects/{subjectId}/assign-class', [AdminController::class, 'assignClassToSubject'])->name('admin.assignClassToSubject');
+    // Trasa do wyświetlania formularza przypisania nauczyciela
+    Route::get('admin/subjects/{subjectId}/assign-teacher', [App\Http\Controllers\AdminController::class, 'assignTeacherToSubject'])->name('admin.assignTeacherToSubject');
+
+    // Trasa do zapisania przypisania nauczyciela do przedmiotu
+    Route::post('admin/subjects/{subjectId}/assign-teacher', [App\Http\Controllers\AdminController::class, 'assignTeacherToSubject'])->name('admin.storeTeacherToSubject');
+    
+
+
 
     
 

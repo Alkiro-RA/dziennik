@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-header">{{ __('Admin Dashboard') }}</div>
 
-                <div class="card-body">
+                <div class="card-body" >
                     <h3>Witaj w panelu administracyjnym!</h3>
                     <p>Możesz tutaj zarządzać użytkownikami i innymi danymi systemowymi.</p>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -32,13 +32,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Admin Dashboard') }}</div>
-
-                <div class="card-body">
+                <div class="card-body mt-5" >
                     @if(session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
@@ -47,6 +41,9 @@
 
                     <a href="{{ route('admin.create') }}" class="btn btn-primary mb-3">Utwórz konto</a>
                     <a href="{{ route('admin.showGroups') }}" class="btn btn-info mb-3">Lista klas</a>
+                    <a href="{{ route('admin.subjects') }}" class="btn btn-success mb-3">Zarządzaj przedmiotami</a>
+
+
 
                     <table class="table">
                         <thead>

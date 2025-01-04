@@ -251,6 +251,69 @@ public function addStudent(Request $request, $groupId)
     // Przekierowanie do listy uczniów tej grupy
     return redirect()->route('admin.showStudents', $groupId)->with('success', 'Uczeń został przypisany do klasy.');
 }
+public function showSubjects()
+{
+    // Pobierz wszystkie przedmioty z tabeli 'subjects'
+    $subjects = \App\Models\Subject::all();
+
+    // Przekaż dane do widoku
+    return view('admin.subjects', compact('subjects'));
+}
+public function createSubject()
+{
+    // Wyświetlenie widoku formularza
+    return view('admin.createSubject');
+}
+
+public function storeSubject(Request $request)
+{
+    // Walidacja danych wejściowych
+    $validated = $request->validate([
+        'name' => 'required|string|max:255|unique:subjects,name',
+    ]);
+
+    // Utworzenie nowego przedmiotu w bazie danych
+    \App\Models\Subject::create([
+        'name' => $validated['name'],
+    ]);
+
+    // Przekierowanie z komunikatem sukcesu
+    return redirect()->route('admin.subjects')->with('success', 'Przedmiot został dodany.');
+}
+public function assignTeacherForm($subjectId)
+{
+    $subject = \App\Models\Subject::findOrFail($subjectId);
+    $teachers = \App\Models\User::where('role', 'nauczyciel')->get(); // Tylko nauczyciele
+
+    return view('admin.assignTeacherToSubject', compact('subject', 'teachers'));
+}
+
+// Funkcja przypisania nauczyciela do przedmiotu
+public function assignTeacherToSubject(Request $request, $subjectId)
+{
+    $request->validate([
+        'teacher_id' => 'required|exists:users,id', // Sprawdź, czy nauczyciel istnieje w bazie
+    ]);
+
+    // Pobierz nauczyciela, którego przypisujemy
+    $teacher = \App\Models\User::findOrFail($request->teacher_id);
+
+    // Pobierz przedmiot, do którego przypisujemy nauczyciela
+    $subject = \App\Models\Subject::findOrFail($subjectId);
+
+    // Przypisanie nauczyciela do przedmiotu (relacja belongsToMany)
+    $subject->teachers()->attach($teacher->id);
+
+    return redirect()->route('admin.subjects')->with('success', 'Nauczyciel został przypisany do przedmiotu.');
+}
+public function showAssignClassToSubjectForm($subjectId)
+{
+    $subject = \App\Models\Subject::findOrFail($subjectId); // Pobranie przedmiotu po ID
+    $groups = \App\Models\Group::all(); // Pobranie wszystkich klas
+    
+    return view('admin.assignClassToSubject', compact('subject', 'groups'));
+}
+
 
 
 }
