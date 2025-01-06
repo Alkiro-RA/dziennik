@@ -63,6 +63,9 @@ Route::middleware('auth')->group(function ()
     Route::post('/teacher/grades/new', [TeacherController::class, 'newGrade'])->name('teacher.newGrade');
     Route::put('/teacher/grades/{gradeId}', [TeacherController::class, 'updateGrade'])->name('teacher.updateGrade');
     Route::post('/teacher/grades', [TeacherController::class, 'storeGrade'])->name('teacher.storeGrade');
+
+    //Oceny ucznia 
+    Route::get('/student/grades', [GradeController::class, 'showGrades'])->name('student.showGrades')->middleware('auth'); // Wyświetlanie ocen
 });
 
 // Home

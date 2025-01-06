@@ -8,7 +8,8 @@
         @if(Auth::user()->role == 'uczen')
         
             <h2>Panel ucznia</h2>
-        
+            <button onclick="location.href='{{ route('student.showGrades',) }}'">Przejdź do listy przedmiotów</button>
+            
         @elseif(Auth::user()->role == 'nauczyciel')
         
             <h2>Panel nauczyciela</h2>
