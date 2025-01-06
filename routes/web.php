@@ -4,6 +4,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GradeController; // Wyświetlanie ocen
 
 // Auth
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -24,34 +25,6 @@ Route::middleware('auth')->group(function ()
     Route::delete('/admin/delete/{user}', [AdminController::class, 'destroy'])->name('admin.destroy');
     Route::get('/admin/users/{id}/role', [App\Http\Controllers\AdminController::class, 'editRole'])->name('users.role');
     Route::post('/admin/users/{id}/role', [App\Http\Controllers\AdminController::class, 'updateRole'])->name('users.updateRole');
-    Route::get('create-group', [AdminController::class, 'createGroup'])->name('admin.createGroup');
-    Route::post('store-group', [AdminController::class, 'storeGroup'])->name('admin.storeGroup');
-    Route::get('show-groups', [AdminController::class, 'showGroups'])->name('admin.showGroups');
-    Route::delete('delete-group/{id}', [AdminController::class, 'deleteGroup'])->name('admin.deleteGroup');
-    Route::get('edit-group/{id}', [AdminController::class, 'editGroup'])->name('admin.editGroup');
-    Route::put('update-group/{id}', [AdminController::class, 'updateGroup'])->name('admin.updateGroup');
-    Route::get('group/{id}/students', [AdminController::class, 'showStudents'])->name('admin.showStudents');
-    Route::get('group/{id}/assign-teacher', [AdminController::class, 'assignTeacher'])->name('admin.assignTeacher');
-    Route::post('group/{id}/assign-teacher', [AdminController::class, 'storeTeacher'])->name('admin.storeTeacher');
-    Route::get('/admin/groups/{groupId}/add-student', [AdminController::class, 'showAddStudentForm'])->name('admin.addStudentForm');
-    Route::post('/admin/groups/{groupId}/add-student', [AdminController::class, 'addStudent'])->name('admin.addStudent');
-    Route::get('/admin/subjects', [AdminController::class, 'showSubjects'])->name('admin.subjects');
-    Route::get('/admin/subjects/create', [AdminController::class, 'createSubject'])->name('admin.createSubject');
-    Route::post('/admin/subjects', [AdminController::class, 'storeSubject'])->name('admin.storeSubject');
-    Route::get('/admin/subjects/{subject}/assign-teacher', [AdminController::class, 'assignTeacherForm'])->name('admin.assignTeacherForm');
-    Route::post('/admin/subjects/{subjectId}/assign-teacher', [AdminController::class, 'assignTeacherToSubject'])->name('admin.assignTeacherToSubject');
-    Route::get('/admin/subjects/{subjectId}/assign-class', [AdminController::class, 'showAssignClassToSubjectForm'])->name('admin.showAssignClassToSubjectForm');
-    Route::post('/admin/subjects/{subjectId}/assign-class', [AdminController::class, 'assignClassToSubject'])->name('admin.assignClassToSubject');
-    // Trasa do wyświetlania formularza przypisania nauczyciela
-    Route::get('admin/subjects/{subjectId}/assign-teacher', [App\Http\Controllers\AdminController::class, 'assignTeacherToSubject'])->name('admin.assignTeacherToSubject');
-
-    // Trasa do zapisania przypisania nauczyciela do przedmiotu
-    Route::post('admin/subjects/{subjectId}/assign-teacher', [App\Http\Controllers\AdminController::class, 'assignTeacherToSubject'])->name('admin.storeTeacherToSubject');
-    
-
-
-
-    
 
     // Teacher
     Route::get('/teacher', [TeacherController::class, 'showSubjects'])->name('teacher.subjects');
@@ -63,6 +36,8 @@ Route::middleware('auth')->group(function ()
     Route::post('/teacher/grades/new', [TeacherController::class, 'newGrade'])->name('teacher.newGrade');
     Route::put('/teacher/grades/{gradeId}', [TeacherController::class, 'updateGrade'])->name('teacher.updateGrade');
     Route::post('/teacher/grades', [TeacherController::class, 'storeGrade'])->name('teacher.storeGrade');
+
+    Route::get('/student/grades', [GradeController::class, 'showGrades'])->name('student.showGrades')->middleware('auth'); // Wyświetlanie ocen
 });
 
 // Home

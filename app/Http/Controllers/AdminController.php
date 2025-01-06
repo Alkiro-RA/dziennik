@@ -81,14 +81,12 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'required|in:uczen,nauczyciel,admin',
         ]);
 
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'] ? bcrypt($validated['password']) : $user->password,
-            'role' => $validated['role'],
         ]);
 
         return redirect()->route('admin.index')->with('success', 'Zaktualizowano dane użytkownika.');
@@ -115,7 +113,7 @@ class AdminController extends Controller
     public function updateRole(Request $request, $id)
     {
         $request->validate([
-            'role' => 'required|string|in:uczen,nauczyciel', 
+            'role' => 'required|string|in:uczen,nauczyciel', // Dopuszczalne role
     ]);
 
         $user = User::findOrFail($id);
@@ -124,196 +122,4 @@ class AdminController extends Controller
 
         return redirect()->route('admin.index')->with('success', 'Rola użytkownika została zaktualizowana.');
     }
-
-    public function createGroup()
-{
-    return view('admin.createGroup');
-}
-
-public function storeGroup(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255|unique:groups,name',
-    ]);
-
-    // Tworzenie nowej grupy
-    \App\Models\Group::create([
-        'name' => $request->name,
-    ]);
-
-    return redirect()->route('admin.index')->with('success', 'Dodano nową klasę!');
-}
-
-
-// widok klas
-public function showGroups()
-{
-    // Pobranie wszystkich klas
-    $groups = \App\Models\Group::all();
-
-    return view('admin.groups', compact('groups'));
-}
-
-//usunięcie klasy
-public function deleteGroup($id)
-{
-    $group = \App\Models\Group::findOrFail($id);
-    $group->delete();
-
-    return redirect()->route('admin.showGroups')->with('success', 'Klasa została usunięta.');
-}
-
-//edycja klasy
-public function editGroup($id)
-{
-    $group = \App\Models\Group::findOrFail($id);
-
-    return view('admin.editGroup', compact('group'));
-}
-public function updateGroup(Request $request, $id)
-{
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-    ]);
-
-    $group = \App\Models\Group::findOrFail($id);
-    $group->update([
-        'name' => $validated['name'],
-    ]);
-
-    return redirect()->route('admin.showGroups')->with('success', 'Klasa została zaktualizowana.');
-}
-
-// lista uczniów
-public function showStudents($groupId)
-{
-    $students = \App\Models\User::where('group_id', $groupId)->where('role', 'uczen')->get();
-    $teacher = \App\Models\User::where('group_id', $groupId)->where('role', 'nauczyciel')->first();
-
-    $group = \App\Models\Group::findOrFail($groupId);
-
-    return view('admin.showStudents', compact('students', 'teacher', 'group'));
-}
-
-
-
-//wyświetla formularz dodania nauczyciela
-public function assignTeacher($groupId)
-{
-    $group = \App\Models\Group::findOrFail($groupId);
-
-    $teachers = \App\Models\User::where('role', 'nauczyciel')->get();
-
-    return view('admin.assignTeacher', compact('group', 'teachers'));
-}
-
-    // Przypisanie nauczyciela do klasy
-    public function storeTeacher(Request $request, $groupId)
-    {
-        $request->validate([
-            'teacher_id' => 'required|exists:users,id',
-        ]);
-    
-        $teacher = \App\Models\User::where('id', $request->teacher_id)
-                                   ->where('role', 'nauczyciel') 
-                                   ->firstOrFail();
-    
-        $teacher->group_id = $groupId;
-        $teacher->save();
-    
-        return redirect()->route('admin.showGroups')->with('success', 'Nauczyciel został przypisany do klasy.');
-    }
-    
-    public function showAddStudentForm($groupId)
-{
-    // Pobierz grupę po ID
-    $group = \App\Models\Group::findOrFail($groupId);
-
-    // Pobierz uczniów, którzy nie są przypisani do żadnej grupy
-    $students = \App\Models\User::where('role', 'uczen')->whereNull('group_id')->get();
-
-    return view('admin.addStudentToGroup', compact('group', 'students'));
-}
-public function addStudent(Request $request, $groupId)
-{
-    // Walidacja: sprawdzenie, czy uczniak o podanym ID istnieje
-    $validated = $request->validate([
-        'student_id' => 'required|exists:users,id',
-    ]);
-
-    // Znajdź ucznia po ID
-    $student = \App\Models\User::find($validated['student_id']);
-
-    // Przypisz ucznia do danej grupy
-    $student->group_id = $groupId;
-    $student->save();
-
-    // Przekierowanie do listy uczniów tej grupy
-    return redirect()->route('admin.showStudents', $groupId)->with('success', 'Uczeń został przypisany do klasy.');
-}
-public function showSubjects()
-{
-    // Pobierz wszystkie przedmioty z tabeli 'subjects'
-    $subjects = \App\Models\Subject::all();
-
-    // Przekaż dane do widoku
-    return view('admin.subjects', compact('subjects'));
-}
-public function createSubject()
-{
-    // Wyświetlenie widoku formularza
-    return view('admin.createSubject');
-}
-
-public function storeSubject(Request $request)
-{
-    // Walidacja danych wejściowych
-    $validated = $request->validate([
-        'name' => 'required|string|max:255|unique:subjects,name',
-    ]);
-
-    // Utworzenie nowego przedmiotu w bazie danych
-    \App\Models\Subject::create([
-        'name' => $validated['name'],
-    ]);
-
-    // Przekierowanie z komunikatem sukcesu
-    return redirect()->route('admin.subjects')->with('success', 'Przedmiot został dodany.');
-}
-public function assignTeacherForm($subjectId)
-{
-    $subject = \App\Models\Subject::findOrFail($subjectId);
-    $teachers = \App\Models\User::where('role', 'nauczyciel')->get(); // Tylko nauczyciele
-
-    return view('admin.assignTeacherToSubject', compact('subject', 'teachers'));
-}
-
-// Funkcja przypisania nauczyciela do przedmiotu
-public function assignTeacherToSubject(Request $request, $subjectId)
-{
-    $request->validate([
-        'teacher_id' => 'required|exists:users,id', // Sprawdź, czy nauczyciel istnieje w bazie
-    ]);
-
-    // Pobierz nauczyciela, którego przypisujemy
-    $teacher = \App\Models\User::findOrFail($request->teacher_id);
-
-    // Pobierz przedmiot, do którego przypisujemy nauczyciela
-    $subject = \App\Models\Subject::findOrFail($subjectId);
-
-    // Przypisanie nauczyciela do przedmiotu (relacja belongsToMany)
-    $subject->teachers()->attach($teacher->id);
-
-    return redirect()->route('admin.subjects')->with('success', 'Nauczyciel został przypisany do przedmiotu.');
-}
-public function showAssignClassToSubjectForm($subjectId)
-{
-    $subject = \App\Models\Subject::findOrFail($subjectId); // Pobranie przedmiotu po ID
-    $groups = \App\Models\Group::all(); // Pobranie wszystkich klas
-    
-    return view('admin.assignClassToSubject', compact('subject', 'groups'));
-}
-
-
-
 }
