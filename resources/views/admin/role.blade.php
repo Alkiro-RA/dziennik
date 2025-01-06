@@ -1,6 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    use Illuminate\Support\Facades\Auth;
+
+    // Sprawdzenie, czy użytkownik jest zalogowany i ma uprawnienia administratora
+    if (!Auth::check() || Auth::user()->role != "admin") {
+        echo '
+        <div class="container">
+            <h1>Brak dostępu</h1>
+            <p>Nie masz uprawnień, aby wyświetlić tę stronę.</p>
+            <a href="' . url('/home') . '" class="btn btn-secondary mt-3">Powrót na stronę główną</a>
+        </div>';
+        return;
+    }
+@endphp
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
