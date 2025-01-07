@@ -43,6 +43,7 @@
                     @if(Auth::check() && Auth::user()->role === 'admin')
                         <li><a href="{{ route('admin.index') }}">Panel Admina</a></li>
                         <li><a href="{{ route('admin.showGroups') }}">Lista Klas</a></li>
+                        <li><a href="{{ route('admin.subjects') }}">Zarządzanie przedmiotami</a></li>
                     @endif
             </ul>
         </nav>
