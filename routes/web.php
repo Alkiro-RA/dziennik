@@ -4,6 +4,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GradeController;
 
 // Auth
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
