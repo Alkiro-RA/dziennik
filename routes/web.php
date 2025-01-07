@@ -47,8 +47,10 @@ Route::middleware('auth')->group(function ()
 
     // Trasa do zapisania przypisania nauczyciela do przedmiotu
     Route::post('admin/subjects/{subjectId}/assign-teacher', [App\Http\Controllers\AdminController::class, 'assignTeacherToSubject'])->name('admin.storeTeacherToSubject');
-    
-
+    Route::delete('/admin/subjects/{subject}', [AdminController::class, 'deleteSubject'])->name('admin.deleteSubject');
+    Route::post('/admin/subjects/{subjectId}/assign-class', [AdminController::class, 'assignClassToSubject'])->name('admin.assignClassToSubject');
+    Route::delete('/admin/groups/{group}/students/{student}', [AdminController::class, 'removeStudentFromClass'])->name('admin.removeStudentFromClass');
+    Route::delete('/admin/groups/{group}/remove-teacher/{teacher}', [AdminController::class, 'removeTeacherFromClass'])->name('admin.removeTeacherFromClass');
 
 
     

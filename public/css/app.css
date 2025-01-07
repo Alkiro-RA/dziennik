@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.nav {
+    display: flex;
+    justify-content: end;
+    max-height: 100px;
+    background-color: #8baaad;
+    padding: 20px;
+    color: #f4fff8;
+    flex-wrap: wrap;
+    margin: 0 0 10px 0;
+}
+.navItem {
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 700;
+}
