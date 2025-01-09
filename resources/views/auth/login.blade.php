@@ -6,7 +6,6 @@
         <h2 class="text-center mb-4">Logowanie</h2>
         <form method="POST" action="{{ route('login') }}">
             @csrf
-            
             <!--e-mail-->
             <div class="mb-3">
                 <label for="email" class="form-label">E-mail:</label>

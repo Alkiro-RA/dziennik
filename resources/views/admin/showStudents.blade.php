@@ -25,7 +25,7 @@
             <form action="{{ route('admin.removeTeacherFromClass', ['group' => $group->id, 'teacher' => $teacher->id]) }}" method="POST" style="display:inline-block;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Czy na pewno chcesz usunąć tego nauczyciela z klasy?')">Usuń nauczyciela z klasy</button>
+                <!-- <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Czy na pewno chcesz usunąć tego nauczyciela z klasy?')">Usuń nauczyciela z klasy</button> -->
             </form>
         </div>
     @else

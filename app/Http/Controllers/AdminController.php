@@ -382,21 +382,4 @@ class AdminController extends Controller
         return redirect()->route('admin.showStudents', $groupId)->with('error', 'Uczeń nie jest przypisany do tej klasy.');
     }
 
-    public function removeTeacherFromClass($groupId, $teacherId)
-    {
-        // Pobieramy klasę (group) oraz nauczyciela (teacher) na podstawie ID
-        $group = \App\Models\Group::findOrFail($groupId);
-        $teacher = \App\Models\User::findOrFail($teacherId);
-
-        // Usuwamy przypisanie nauczyciela do klasy (zakładam, że relacja jest przez tabelę pośredniczącą)
-        $group->teachers()->detach($teacher->id);
-
-        // Przekierowanie z komunikatem
-        return redirect()->route('admin.showGroup', $group->id)->with('success', 'Nauczyciel został usunięty z klasy.');
-    }
-
-
-
-
-
 }
